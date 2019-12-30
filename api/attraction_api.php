@@ -37,17 +37,40 @@ function getAttractionInfoForCard($first = 0, $number = 50, $key = null)
     return $res;
 }
 
-
-function storeBookFromDouBan($book_json)
+/** 获得景点的所有信息
+ * @param int $id 要获得景点的id
+ * @return array 返回数据数组，其中只有play_cost为数组，其他都为字符串（如果不为null）
+ * @note 返回中images用逗号分隔，所以解析时使用：
+ * ```
+ *  explode(',', $data['images']);
+ * ```
+ * 得到数组使用
+ */
+function getAttractionAllInfoById($id)
 {
-    $json_obj = json_decode($book_json, true);
+    $db = MySqlAPI::getInstance();
+
+    $res = $db->getRow('select * from att_all_info where id=' . $id);
+    $res['play_cost'] = $db->getAll('select ticket_name,price from playcost where id=' . $id);
+
+    $db->close();
+
+    isEntry404(($res === null));
+
+    return $res;
+}
+
+/*
+function storeBookFromDouBan($attraction_json)
+{
+    $json_obj = json_decode($attraction_json, true);
     isEntry404($json_obj == null || $json_obj == false);
 
     // 存储图书的图片
     $img_url = $json_obj['image'];
     $img_file_name = $json_obj['id'] . substr($img_url, strripos($img_url, '.'));
-    $local_img_path = "http://api.bookstudy.com/book/image/$img_file_name";
-    downloadNetworkFile($img_url, dirname(__FILE__) . "/../bookstudy_api/book/image/$img_file_name");
+    $local_img_path = "http://timatic.com/attraction/images/$img_file_name";
+    downloadNetworkFile($img_url, dirname(__FILE__) . "/../attractionstudy_api/attraction/image/$img_file_name");
 
     // 打开数据库
     $db = MySqlAPI::getInstance();
@@ -67,7 +90,7 @@ function storeBookFromDouBan($book_json)
         'summary' => $json_obj['summary'],
         'translator' => addslashes($translator)
     ];
-    $res = $db->insert('bookinfo', $data);
+    $res = $db->insert('attractioninfo', $data);
 
     // 详细信息的获取
     $tags = '';
@@ -85,12 +108,13 @@ function storeBookFromDouBan($book_json)
         'author_intro' => addslashes($json_obj['author_intro']),
         'catalog' => addslashes($json_obj['catalog'])
     ];
-    $res = $db->insert('bookdetail', $data);
+    $res = $db->insert('attractiondetail', $data);
 
     // 关闭数据库并返回插入后影响的ID号
     $db->close();
     return $res;
 }
+*/
 
 /**
  * 获得所有景点的数量

@@ -1,11 +1,10 @@
 <?php
-require_once(dirname(__FILE__) . '../api/attraction_api.php');
-// isLogedIn();
+require_once(__DIR__ . '\api\attraction_api.php');
 refreshOnce();
 
 global $attraction;
 if (isset($_GET['id']) && !empty($_GET['id'])) {
-    $attraction = getBookInfoById($_GET['id']);
+    $attraction = getAttractionAllInfoById($_GET['id']);
 } else {
     isEntry404(true);
 }
@@ -19,86 +18,55 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>图书<?php echo $attraction['id']; ?></title>
-    <?php include_once('html/included_head.php'); ?>
-    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap-datetimepicker.min.css">
+    <?php include_once(__DIR__ . '/html/included_head.php'); ?>
 </head>
 
 <body onload="createUserLentItemsForBook(<?php echo $attraction['id']; ?>);">
     <div class="page">
-        <?php include_once('html/header_navbar.php'); ?>
+        <?php include_once(__DIR__ . '/html/header_navbar.php'); ?>
         <div class="page-content d-flex align-items-stretch">
-            <?php include_once('html/side_navbar.php'); ?>
             <div class="content-inner">
-                <header class="page-header">
-                    <div class="container-fluid">
-                        <h2 class="no-margin-bottom">用户管理</h2>
-                    </div>
-                </header>
                 <div class="breadcrumb-holder container-fluid">
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.php">主页</a></li>
                         <li class="breadcrumb-item"><a href=<?php $page = @$_GET['page'] ? $_GET['page'] : 1;
-                                                            echo "'attraction_manager.php?page={$page}'"; ?>>图书管理</a></li>
-                        <li class="breadcrumb-item active">图书<?php echo $attraction['id']; ?></li>
+                                                            echo "'/index.php?page={$page}'"; ?>>主页</a></li>
+                        <li class="breadcrumb-item active"><?php echo $attraction['name']; ?></li>
                     </ul>
                 </div>
 
                 <section class="forms">
                     <form id="attraction-form" action="api/attraction_update.php" class="form-horizontal" method="post" enctype="multipart/form-data">
                         <div class="container-fluid d-flex flex-row">
-                            <div class="card  card-primary col-lg-12 no-padding">
-                                <div class="card-header">
-                                    <h3>基本信息</h3>
-                                </div>
+                            <div class="card card-primary col-lg-12 no-padding">
                                 <div class="card-body d-flex align-items-center row">
-                                    <div class="col-lg-4 d-flex justify-content-center pb-3 flex-column">
-                                        <img id="attraction-image" src=<?php echo "{$attraction['image']}"; ?> alt="void" class="img-fluid">
-                                        <input id="tmp-file-input" name="image" onchange="changeBookImage(this)" type="file" class="hidden-form-control">
-                                        <button type="button" class="btn btn-primary mt-3" onclick="$('#tmp-file-input').click();">更换封面</button>
-                                        <small class="help-block-none mt-2">请选择不大于1M的png、jpg或jpeg格式的图片文件</small>
+                                    <div class="col-4 d-flex justify-content-center pb-3 flex-column">
+                                        <img src=<?php echo "{$attraction['image']}"; ?> alt="void" class="img-fluid">
                                     </div>
-                                    <div class="col-lg-8">
-                                        <div class="container-fluid">
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 form-control-label">ID</label>
-                                                <div class="col-lg-9">
-                                                    <input name="id" type="text" readonly value=<?php echo "'{$attraction['id']}'"; ?> class="form-control">
-                                                    <small class="help-block-none">书籍的ID编号不可更改.</small>
+                                    <div class="col-8">
+                                        <div class="container-fluid d-flex flex-column">
+                                            <div>
+                                                <div class="line"></div>
+                                                <h1><?php echo $attraction['name']; ?></h1>
+                                                <div class="line"></div>
+                                            </div>
+
+                                            <div>
+                                                <div class="row">
+                                                    <div class="col-2"><strong>景点地址</strong></div>
+                                                    <div class="col-10"><?php echo $attraction['address'] ?></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2"><strong>开放时间</strong></div>
+                                                    <div class="col-10"><?php echo $attraction['open_time'] ?></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2"><strong>评分</strong></div>
+                                                    <div class="col-10 row">
+                                                        <h3><?php echo $attraction['mark']; ?></h3>/5.0
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 form-control-label">ISBN13<strong class="required-label-star">*</strong></label>
-                                                <div class="col-lg-9">
-                                                    <input name="isbn13" type="text" value=<?php echo "'{$attraction['isbn13']}'"; ?> class="form-control" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
-                                                    <small class="help-block-none">书籍的ISBN13分类号尽量不要更改！</small>
-                                                </div>
-                                            </div>
-                                            <div class="line"></div>
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 form-control-label">书名<strong class="required-label-star">*</strong></label>
-                                                <div class="col-lg-9">
-                                                    <input name="title" maxlength="100" type="text" class="form-control" value=<?php echo "'{$attraction['title']}'"; ?>>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 form-control-label">副标题</label>
-                                                <div class="col-lg-9">
-                                                    <input name="subtitle" maxlength="100" type="text" class="form-control" value=<?php echo "'{$attraction['subtitle']}'"; ?>>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label class="col-lg-3 form-control-label">原标题</label>
-                                                <div class="col-lg-9">
-                                                    <input name="origin_title" maxlength="100" type="text" class="form-control" value=<?php echo "'{$attraction['origin_title']}'"; ?>>
-                                                </div>
-                                            </div>
-                                            <div class="line"></div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">作者<strong class="required-label-star">*</strong></label>
-                                                <div class="col-sm-9">
-                                                    <input name="author" maxlength="100" type="text" class="form-control" value=<?php echo "'{$attraction['author']}'"; ?>>
-                                                </div>
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -308,8 +276,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
     <script src="vendor/chart.js/Chart.min.js"></script>
     <script src="vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="js/charts-custom.js"></script>
     <!-- Main File-->
     <script src="js/front.js"></script>
