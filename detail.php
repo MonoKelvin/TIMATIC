@@ -35,96 +35,118 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     </ul>
                 </div>
 
-                <section class="forms">
-                    <form id="attraction-form" action="api/attraction_update.php" class="form-horizontal" method="post" enctype="multipart/form-data">
-                        <div class="container-fluid d-flex flex-row">
-                            <div class="card card-primary col-lg-12 no-padding">
-                                <div class="card-body d-flex">
-                                    <div class="col-4 d-flex justify-content-center pb-3 flex-column">
-                                        <img src=<?php echo "{$attraction['image']}"; ?> alt="void" class="img-fluid">
-                                    </div>
-                                    <div class="col-8">
-                                        <div class="container-fluid d-flex flex-column">
-                                            <h1 class="large-title"><?php echo $attraction['name']; ?></h1>
+                <section>
+                    <!-- 主要信息 -->
+                    <div class="container-fluid d-flex flex-row">
+                        <div class="card card-primary col-lg-12 no-padding">
+                            <div class="card-body d-flex">
+                                <!-- 景点照片 -->
+                                <div class="col-4 d-flex justify-content-center pb-3 flex-column">
+                                    <img src=<?php echo "{$attraction['image']}"; ?> alt="void" class="img-fluid">
+                                </div>
+                                <!-- 基本信息 -->
+                                <div class="col-8">
+                                    <div class="container-fluid d-flex flex-column">
+                                        <h1 class="large-title"><?php echo $attraction['name']; ?></h1>
+                                        <div class="line"></div>
+                                        <div>
+                                            <div class="row">
+                                                <div class="col-2"><strong>景点地址</strong></div>
+                                                <div class="col-10"><?php echo $attraction['address'] ?></div>
+                                            </div>
                                             <div class="line"></div>
-                                            <div>
-                                                <div class="row">
-                                                    <div class="col-2"><strong>景点地址</strong></div>
-                                                    <div class="col-10"><?php echo $attraction['address'] ?></div>
-                                                </div>
-                                                <div class="line"></div>
-                                                <div class="row">
-                                                    <div class="col-2"><strong>开放时间</strong></div>
-                                                    <div class="col-10"><?php echo $attraction['open_time'] ?></div>
-                                                </div>
-                                                <div class="line"></div>
-                                                <div class="row">
-                                                    <div class="col-2"><strong>评分</strong></div>
-                                                    <div class="col-10 d-flex align-items-end">
-                                                        <h1 class="text-red no-margin"><?php echo $attraction['mark']; ?></h1>
-                                                        <span>/5.0分</span>
-                                                    </div>
+                                            <div class="row">
+                                                <div class="col-2"><strong>开放时间</strong></div>
+                                                <div class="col-10"><?php echo $attraction['open_time'] ?></div>
+                                            </div>
+                                            <div class="line"></div>
+                                            <div class="row">
+                                                <div class="col-2"><strong>评分</strong></div>
+                                                <div class="col-10 d-flex align-items-end">
+                                                    <h1 class="text-red no-margin"><?php echo $attraction['mark']; ?></h1>
+                                                    <span>&nbsp;/5.0分</span>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-lg-12 col-12">
-                                    <div class="card card-primary">
-                                        <!-- <div class="card-header">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-12 col-12">
+                                <div class="card card-primary">
+                                    <!-- <div class="card-header">
                                             <h3>景点详细信息</h3>
                                         </div> -->
-                                        <div class="card-body m-1">
-                                            <div class="column">
-                                                <h3 class="text-left text-primary mb-3">游玩门票</h3>
-                                                <div class="table-responsive ml-3 mr-3">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="text-left">名称</th>
-                                                                <th class="text-left">价格</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php createPlayCostTableBody($attraction['play_cost']); ?>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="line"></div>
+                                    <div class="card-body m-1">
 
-                                            <div class="column">
-                                                <h3 class="text-left text-primary mb-3">景点介绍</h3>
-                                                <div class="d-flex flex-column ml-3 mr-3">
-                                                    <div>
-                                                        <div class="badge badge-rounded badge-warning mr-3">特色</div>
-                                                        <p class=" d-inline-block"><?php echo $attraction['feature']; ?></p>
-                                                    </div>
-                                                    <p rows="6"><?php echo $attraction['summary']; ?></p>
-                                                </div>
+                                        <!-- 游玩门票 -->
+                                        <div class="column">
+                                            <h3 class="text-left text-primary mb-3">游玩门票</h3>
+                                            <div class="table-responsive ml-3 mr-3">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-left">名称</th>
+                                                            <th class="text-left">价格</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php createPlayCostTableBody($attraction['play_cost']); ?>
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                            <div class="line"></div>
-
-                                            <div class="column">
-                                                <h3 class="text-left text-primary mb-3">更多图片</h3>
-                                                <div class="gallery ml-3 mr-3">
-                                                    <?php createPictureGallery($attraction['images']); ?>
-                                                </div>
-                                            </div>
-                                            <div class="line"></div>
-
                                         </div>
+                                        <div class="line"></div>
+
+                                        <!-- 景点介绍 -->
+                                        <div class="column">
+                                            <h3 class="text-left text-primary mb-3">景点介绍</h3>
+                                            <div class="d-flex flex-column ml-3 mr-3">
+                                                <div>
+                                                    <div class="badge badge-rounded badge-warning mr-3">特色</div>
+                                                    <p class=" d-inline-block"><?php echo $attraction['feature']; ?></p>
+                                                </div>
+                                                <p rows="6"><?php echo $attraction['summary']; ?></p>
+                                            </div>
+                                        </div>
+                                        <div class="line"></div>
+
+                                        <!-- 更多图片-图片画廊 -->
+                                        <div class="column">
+                                            <h3 class="text-left text-primary mb-3">更多图片</h3>
+                                            <div class="gallery ml-3 mr-3">
+                                                <?php createPictureGallery($attraction['images']); ?>
+                                            </div>
+                                        </div>
+                                        <div class="line"></div>
+
+                                        <!-- 交通信息 -->
+                                        <div class="column">
+                                            <h3 class="text-left text-primary mb-3">交通指南</h3>
+                                            <div class="d-flex flex-column ml-3 mr-3">
+                                                <?php echo $attraction['traffic']; ?>
+                                            </div>
+                                        </div>
+                                        <div class="line"></div>
+
+                                        <!-- 其他补充信息 -->
+                                        <div class="column">
+                                            <h3 class="text-left text-primary mb-3">其他信息</h3>
+                                            <div class="d-flex flex-column ml-3 mr-3">
+                                                <?php echo $attraction['more_info']; ?>
+                                            </div>
+                                        </div>
+                                        <div class="line"></div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </section>
             </div>
         </div>
