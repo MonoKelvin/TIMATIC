@@ -464,19 +464,22 @@ Badge
 ******************/
 
 .badge {
-    padding: 8px 10px;
-    line-height: 15px;
-    font-size: 18px;
-    display: inline-block;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25rem;
+    vertical-align: middle;
+    padding: 7px 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border-radius: 4px;
+    font-size: 12px;
 }
 
 .badge-info {
     color: #fff;
     background-color: #4d7cff;
+}
+
+.badge-warning {
+    color: #fff;
+    background-color: #ff9913;
 }
 
 
@@ -1301,14 +1304,63 @@ nav.navbar .menu-btn span:nth-of-type(2)::after {
     color: #ff5e5e !important;
 }
 
-.card {
+.hover-shadow {
     transition: all 0.3s;
 }
 
-.card .img-fluid {
-    cursor: pointer !important;
+.hover-shadow:hover {
+    box-shadow: 0 10px 30px 0 #d6dde0;
 }
 
-.card:hover {
-    box-shadow: 0 10px 30px 0 #d3d8db;
+
+/*******************
+Gallery
+******************/
+
+.gallery {
+    display: inline-block;
+    width: 100%;
+}
+
+.gallery .gallery-item {
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left;
+    border-radius: 3px;
+    margin-right: 7px;
+    margin-bottom: 7px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.5s;
+}
+
+.gallery .gallery-item {
+    width: 240px;
+    height: 240px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.gallery .gallery-item:hover {
+    background-position: right;
+}
+
+.gallery .gallery-more div {
+    font-size: 2rem;
+    color: white;
+    text-align: center;
+    line-height: 240px;
+}
+
+.gallery .gallery-more:after {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
 }

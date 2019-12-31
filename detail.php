@@ -19,9 +19,10 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>图书<?php echo $attraction['id']; ?></title>
     <?php include_once(__DIR__ . '/html/included_head.php'); ?>
+    <link rel="stylesheet" href="vendor/jquery/jquery.chocolat.css">
 </head>
 
-<body onload="createUserLentItemsForBook(<?php echo $attraction['id']; ?>);">
+<body>
     <div class="page">
         <?php include_once(__DIR__ . '/html/header_navbar.php'); ?>
         <div class="page-content d-flex align-items-stretch">
@@ -38,31 +39,30 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <form id="attraction-form" action="api/attraction_update.php" class="form-horizontal" method="post" enctype="multipart/form-data">
                         <div class="container-fluid d-flex flex-row">
                             <div class="card card-primary col-lg-12 no-padding">
-                                <div class="card-body d-flex align-items-center row">
+                                <div class="card-body d-flex">
                                     <div class="col-4 d-flex justify-content-center pb-3 flex-column">
                                         <img src=<?php echo "{$attraction['image']}"; ?> alt="void" class="img-fluid">
                                     </div>
                                     <div class="col-8">
                                         <div class="container-fluid d-flex flex-column">
-                                            <div>
-                                                <div class="line"></div>
-                                                <h1><?php echo $attraction['name']; ?></h1>
-                                                <div class="line"></div>
-                                            </div>
-
+                                            <h1 class="large-title"><?php echo $attraction['name']; ?></h1>
+                                            <div class="line"></div>
                                             <div>
                                                 <div class="row">
                                                     <div class="col-2"><strong>景点地址</strong></div>
                                                     <div class="col-10"><?php echo $attraction['address'] ?></div>
                                                 </div>
+                                                <div class="line"></div>
                                                 <div class="row">
                                                     <div class="col-2"><strong>开放时间</strong></div>
                                                     <div class="col-10"><?php echo $attraction['open_time'] ?></div>
                                                 </div>
+                                                <div class="line"></div>
                                                 <div class="row">
                                                     <div class="col-2"><strong>评分</strong></div>
-                                                    <div class="col-10 row">
-                                                        <h3><?php echo $attraction['mark']; ?></h3>/5.0
+                                                    <div class="col-10 d-flex align-items-end">
+                                                        <h1 class="text-red no-margin"><?php echo $attraction['mark']; ?></h1>
+                                                        <span>/5.0分</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -77,161 +77,47 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                             <div class="row">
                                 <div class="col-lg-12 col-12">
                                     <div class="card card-primary">
-                                        <div class="card-header">
-                                            <h3>详细信息</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">摘要</label>
-                                                <div class="col-sm-9">
-                                                    <textarea name="summary" class="form-control" rows="6"><?php echo $attraction['summary']; ?></textarea>
+                                        <!-- <div class="card-header">
+                                            <h3>景点详细信息</h3>
+                                        </div> -->
+                                        <div class="card-body m-1">
+                                            <div class="column">
+                                                <h3 class="text-left text-primary mb-3">游玩门票</h3>
+                                                <div class="table-responsive ml-3 mr-3">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-left">名称</th>
+                                                                <th class="text-left">价格</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php createPlayCostTableBody($attraction['play_cost']); ?>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                             <div class="line"></div>
 
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">作者简介</label>
-                                                <div class="col-sm-9">
-                                                    <textarea name="author_intro" class="form-control" rows="6"><?php echo $attraction['author_intro']; ?></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="line"></div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">翻译</label>
-                                                <div class="col-sm-9">
-                                                    <input name="translator" maxlength="32" type="text" class="form-control" value=<?php echo "'{$attraction['translator']}'"; ?>>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">出版社</label>
-                                                <div class="col-sm-9">
-                                                    <input name="publisher" maxlength="32" type="text" class="form-control" value=<?php echo "'{$attraction['publisher']}'"; ?>>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">出版时间</label>
-                                                <div class="col-sm-9">
-                                                    <input name="pubdate" class="form-control" id="datetimepicker" type="text" value=<?php echo "'{$attraction['pubdate']}'"; ?>>
-                                                </div>
-                                            </div>
-                                            <div class="line"></div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">页数</label>
-                                                <div class="col-sm-9">
-                                                    <input name="pages" type="text" class="form-control" maxlength="10" value=<?php echo "'{$attraction['pages']}'"; ?> onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">定价</label>
-                                                <div class="col-sm-9">
-                                                    <input name="price" type="text" class="form-control" maxlength="16" value=<?php echo "'{$attraction['price']}'"; ?> onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
-                                                    <small class="help-block-none">默认计价单位为‘元’</small>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">评分</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" disabled="" placeholder=<?php echo "'{$attraction['rating']}'"; ?> class="form-control">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">装帧形式</label>
-                                                <div class="col-sm-9">
-                                                    <select name="binding" class="form-control mb-3">
-                                                        <option><?php echo $attraction['binding']; ?></option>
-                                                        <option>平装</option>
-                                                        <option>精装</option>
-                                                        <option>线装</option>
-                                                        <option>单行本</option>
-                                                        <option>合订本</option>
-                                                        <option>普及本</option>
-                                                        <option>缩印本</option>
-                                                        <option>袖珍本</option>
-                                                        <option>特藏本</option>
-                                                        <option>豪华本</option>
-                                                        <option>简册装</option>
-                                                        <option>卷轴装</option>
-                                                        <option>经折装</option>
-                                                        <option>旋风装</option>
-                                                        <option>蝴蝶装</option>
-                                                        <option>包背装</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">标签</label>
-                                                <div class="col-sm-9">
-                                                    <div id="add-tag-container" class="bootstrap-label">
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend pb-2">
-                                                                <button onclick="addTag();" type="button" class="btn btn-primary"> <i class="fa fa-plus"></i> </button>
-                                                            </div>
-                                                            <input id="input-add-tag" class="form-control">
-                                                        </div>
-                                                        <?php
-                                                        $tags = explode(',', $attraction['tags']);
-                                                        if ($attraction['tags']) {
-                                                            foreach ($tags as $tag) {
-                                                                echo "<span class='label label-info m-1'>$tag";
-                                                                echo '<a onclick="deleteTag(this);" class="text-white pl-2" style="cursor:pointer">';
-                                                                echo '<i class="fa fa-trash"></i></a></span>';
-                                                            }
-                                                        }
-                                                        ?>
+                                            <div class="column">
+                                                <h3 class="text-left text-primary mb-3">景点介绍</h3>
+                                                <div class="d-flex flex-column ml-3 mr-3">
+                                                    <div>
+                                                        <div class="badge badge-rounded badge-warning mr-3">特色</div>
+                                                        <p class=" d-inline-block"><?php echo $attraction['feature']; ?></p>
                                                     </div>
+                                                    <p rows="6"><?php echo $attraction['summary']; ?></p>
                                                 </div>
                                             </div>
                                             <div class="line"></div>
 
-                                            <div class="form-group row">
-                                                <label class="col-sm-3 form-control-label">目录章节</label>
-                                                <div class="col-sm-9">
-                                                    <?php
-                                                    $nl_count = substr_count($attraction['catalog'], "\n") * 26;
-                                                    $nl_count = $nl_count < 200 ? 200 : ($nl_count > 1000 ? 1000 : $nl_count);
-                                                    echo '<textarea name="catalog" style="height:' . $nl_count . 'px;" class="form-control" rows="6">';
-                                                    echo $attraction['catalog'];
-                                                    echo '</textarea>';
-                                                    ?>
+                                            <div class="column">
+                                                <h3 class="text-left text-primary mb-3">更多图片</h3>
+                                                <div class="gallery ml-3 mr-3">
+                                                    <?php createPictureGallery($attraction['images']); ?>
                                                 </div>
                                             </div>
-                                            <div class="line pt-5"></div>
-
-                                            <div class="form-group row justify-content-end">
-                                                <div class="col-sm-2 pb-2">
-                                                    <button type="button" data-toggle="modal" data-target="#alterAlert" class="form-control btn btn-primary">保存修改</button>
-                                                    <div id="alterAlert" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade text-left">
-                                                        <div role="document" class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h3 class="modal-title">数据改动提示</h3>
-                                                                    <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p>你确定要保存当前数据的修改吗？</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" data-dismiss="modal" class="btn btn-secondary">取消</button>
-                                                                    <!-- <form action="api/attraction_update.php" method="post"> -->
-                                                                    <button id="change-attraction-submit" type="submit" name="submit" value="submit" class="btn btn-primary">确定</button>
-                                                                    <!-- </form> -->
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2 pb-2">
-                                                    <button type="button" onclick="window.location.reload();" class="form-control btn btn-secondary">还原</button>
-                                                </div>
-                                            </div>
+                                            <div class="line"></div>
 
                                         </div>
                                     </div>
@@ -240,71 +126,50 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                         </div>
                     </form>
                 </section>
-
-                <div class="container-fluid">
-                    <div class="card card-primary">
-                        <div class="card-header d-flex align-items-center">
-                            <h3 class="h4">正借此书的用户</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">用户id</th>
-                                            <th class="text-center">用户名</th>
-                                            <th class="text-center">借书时间</th>
-                                            <th class="text-center">转到</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="users-lent-the-attraction-table">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
 
     <!-- JavaScript files-->
     <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/popper.js/umd/popper.min.js"> </script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
     <script src="vendor/jquery.cookie/jquery.cookie.js"> </script>
-    <script src="vendor/chart.js/Chart.min.js"></script>
-    <script src="vendor/jquery-validation/jquery.validate.min.js"></script>
-    <script src="js/charts-custom.js"></script>
-    <!-- Main File-->
+    <script src="vendor/jquery/jquery.chocolat.min.js"></script>
     <script src="js/front.js"></script>
-    <!-- Ajax Request File -->
-    <script src="js/ajax/user_lent_attractions.js"></script>
-    <!-- DataTimePicker Plugin -->
     <script>
-        <?php
-        if ($attraction['tags'] != '') {
-            $tmp = explode(',', $attraction['tags']);
-            foreach ($tmp as $key => $val) {
-                $tmp[$key] = '"' . $val . '"';
-            }
-            $tmp = implode(',', $tmp);
-            echo "var tags = [$tmp];";
-        } else {
-            echo "var tags = [];";
-        }
-        ?>
+        $(function() {
+            // Gallery
+            $(".gallery .gallery-item").each(function() {
+                var me = $(this);
 
-        document.getElementById('change-attraction-submit').addEventListener('click', function() {
-            var attractionForm = $('#attraction-form');
-            var tmpTagsInput = $("<input type='text' name='tags' class='hidden-form-control'/>");
-            tmpTagsInput.val(tags.join(','));
-            attractionForm.append(tmpTagsInput);
-            attractionForm.submit();
+                me.attr('href', me.data('image'));
+                me.attr('title', me.data('title'));
+                if (me.parent().hasClass('gallery-fw')) {
+                    me.css({
+                        height: me.parent().data('item-height'),
+                    });
+                    me.find('div').css({
+                        lineHeight: me.parent().data('item-height') + 'px'
+                    });
+                }
+                me.css({
+                    backgroundImage: 'url("' + me.data('image') + '")'
+                });
+            });
+            if (jQuery().Chocolat) {
+                $(".gallery").Chocolat({
+                    className: 'gallery',
+                    imageSelector: '.gallery-item',
+                });
+            }
+
+            // Chocolat
+            if ($('.chocolat-parent').length && jQuery().Chocolat) {
+                $('.chocolat-parent').Chocolat();
+            }
+
         });
     </script>
-    <script src="js/attraction_form_relative.js"></script>
 </body>
 
 </html>

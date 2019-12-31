@@ -60,6 +60,40 @@ function getAttractionAllInfoById($id)
     return $res;
 }
 
+/** 创建景点游玩表项内容
+ * @param array $play_cost 传入的书表项array数据
+ */
+function createPlayCostTableBody($play_cost)
+{
+    $html = '';
+    foreach ($play_cost as $item) {
+        $html .= '<tr><td class="text-left">' . $item['ticket_name'] . '</td><td class="text-left"><h2 class="text-red">￥' . $item['price'] . '<small class="text-muted small">&nbsp;起</small></h2></td></tr>';
+    }
+
+    echo $html;
+}
+
+/** 创建图片画廊
+ * @param array $imgs 传入的图片地址字符串，每个地址用`','`隔开
+ */
+function createPictureGallery($imgs)
+{
+    if (!isValidString($imgs)) {
+        echo '<div class="gallery-item gallery-more" data-image="http://timatic.com/attraction/images/default_empty.jpg" href="http://timatic.com/attraction/images/default_empty.jpg" style="background-image: url(&quot;http://timatic.com/attraction/images/default_empty.jpg&quot;);"><div>+0</div></div>';
+        return;
+    }
+
+    // 分割字符串
+    $imgs = explode(',', $imgs);
+
+    $html = '';
+    foreach ($imgs as $img) {
+        $html .= '<div class="gallery-item" data-image="' . $img . '" href="' . $img . '" style="background-image: url(&quot;' . $img . '&quot;);"></div>';
+    }
+
+    echo $html;
+}
+
 /*
 function storeBookFromDouBan($attraction_json)
 {
