@@ -1,13 +1,13 @@
 <?php
 require_once(__DIR__ . '\api\attraction_api.php');
-refreshOnce();
+// refreshOnce();
 
 global $attraction;
-if (isset($_GET['id']) && !empty($_GET['id'])) {
+if (isset($_GET['id']) && $_GET['id'] > 0) {
     $attraction = getAttractionAllInfoById($_GET['id']);
-} else {
-    isEntry404(true);
 }
+
+isEntry404(!$attraction || count($attraction) < 2);
 
 ?>
 
@@ -39,13 +39,14 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                     <!-- 主要信息 -->
                     <div class="container-fluid d-flex flex-row">
                         <div class="card card-primary col-lg-12 no-padding">
-                            <div class="card-body d-flex">
+                            <div class="card-body d-flex align-items-start pt-4">
                                 <!-- 景点照片 -->
-                                <div class="col-4 d-flex justify-content-center pb-3 flex-column">
+                                <div class="col-5 d-flex align-items-start flex-column">
                                     <img src=<?php echo "{$attraction['image']}"; ?> alt="void" class="img-fluid">
+                                    <a href="#picture-gallery" class="text-right mt-2">查看更多图片>></a>
                                 </div>
                                 <!-- 基本信息 -->
-                                <div class="col-8">
+                                <div class="col-7">
                                     <div class="container-fluid d-flex flex-column">
                                         <h1 class="large-title"><?php echo $attraction['name']; ?></h1>
                                         <div class="line"></div>
@@ -61,7 +62,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
                                             </div>
                                             <div class="line"></div>
                                             <div class="row">
-                                                <div class="col-2"><strong>评分</strong></div>
+                                                <div class="col-2"><strong>游客评分</strong></div>
                                                 <div class="col-10 d-flex align-items-end">
                                                     <h1 class="text-red no-margin"><?php echo $attraction['mark']; ?></h1>
                                                     <span>&nbsp;/5.0分</span>
@@ -117,7 +118,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
                                         <!-- 更多图片-图片画廊 -->
                                         <div class="column">
-                                            <h3 class="text-left text-primary mb-3">更多图片</h3>
+                                            <h3 id="picture-gallery" class="text-left text-primary mb-3">更多图片</h3>
                                             <div class="gallery ml-3 mr-3">
                                                 <?php createPictureGallery($attraction['images']); ?>
                                             </div>

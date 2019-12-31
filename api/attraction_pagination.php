@@ -30,7 +30,7 @@ function getAttractionCards($page = 1, $key = null)
         $mark = $attraction['mark'];
         $ticket = $attraction['ticket'];
         $image = $attraction['image'];
-        $summary = mb_strcut($attraction['summary'], 0, 170); // 只最多获取前150个字符
+        $summary = mb_strcut($attraction['summary'], 0, 172);
 
         // 如果没有图片则使用默认图片
         if (!isValidString($image)) {
