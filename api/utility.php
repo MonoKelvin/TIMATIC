@@ -22,7 +22,7 @@ function refreshOnce()
     if (!session_id()) {
         session_start();
     }
-    $_SESSION['refresh_code'] = random_int(0, 10000);
+    $_SESSION['refresh_code'] = 1;
 }
 
 /**
@@ -148,90 +148,5 @@ function isValidDate($data, $isVoid = false)
         return true;
     } else {
         return false;
-    }
-}
-
-/**********************************************************
- * 以下检验ISBN码的算法函数来源于 `露兜`
- * 其博客地址为：http://www.ludou.org/
- *
- * 使用方法举例：
- *      isISBN('9787507421781')    // 输出 true
- **********************************************************/
-
-/**
- * 用于计算ISBN加权和
- * @param string $isbn : isbn码
- * @param int $len : isbn码长度
- */
-function isbnSum($isbn, $len)
-{
-    $sum = 0;
-
-    if ($len == 10) {
-        for ($i = 0; $i < $len - 1; $i++) {
-            $sum = $sum + (int) $isbn[$i] * ($len - $i);
-        }
-    } elseif ($len == 13) {
-        for ($i = 0; $i < $len - 1; $i++) {
-            if ($i % 2 == 0)
-                $sum = $sum + (int) $isbn[$i];
-            else
-                $sum = $sum + (int) $isbn[$i] * 3;
-        }
-    }
-    return $sum;
-}
-
-/**
- * 用于计算ISBN末位校验码
- * @param string $isbn : isbn码
- * @param int $len : isbn码长度，只能为10或13
- */
-function isbnCompute($isbn, $len)
-{
-
-    if ($len == 10) {
-        $digit = 11 - isbnSum($isbn, $len) % 11;
-
-        if ($digit == 10) {
-            $rc = 'X';
-        } else if ($digit == 11) {
-            $rc = '0';
-        } else {
-            $rc = (string) $digit;
-        }
-    } else if ($len == 13) {
-        $digit = 10 - isbnSum($isbn, $len) % 10;
-
-        if ($digit == 10) {
-            $rc = '0';
-        } else {
-            $rc = (string) $digit;
-        }
-    }
-
-    return $rc;
-}
-
-/**
- * 用于判断是否为ISBN号
- * @param string $isbn : isbn码，可以是10位或13位的
- * @return bool 返回是否为合法的ISBN码
- */
-function isISBN($isbn)
-{
-    $len = strlen($isbn);
-
-    if ($len != 10 && $len != 13) {
-        return 0;
-    }
-
-    $rc = isbnCompute($isbn, $len);
-
-    if ($isbn[$len - 1] != $rc) {
-        return 0;
-    } else {
-        return 1;
     }
 }

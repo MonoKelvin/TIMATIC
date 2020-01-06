@@ -12,11 +12,11 @@ class MySqlAPI
     //私有的属性
     private static $dbcon = null;
     private $host = '127.0.0.1';
-    private $port = '3308';
+    private $port = '3306';
     private $user = 'root';
     private $pwd = '123';
     private $charset = 'utf8';
-    private $db = 'TimaticDB';
+    private $db = 'Timatic_DB';
     private $link;
 
     //私有的构造方法

@@ -1,7 +1,7 @@
 <?PHP
 require_once('api/utility.php');
 // isLogedIn();
-// refreshOnce();
+refreshOnce();
 
 global $page;
 if ($page = @$_GET['page']) {
@@ -22,7 +22,7 @@ $key = @$_GET['key'];
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>图书管理</title>
+    <title>旅游信息查询系统</title>
     <?php include_once('html/included_head.php'); ?>
 </head>
 
@@ -30,7 +30,15 @@ $key = @$_GET['key'];
     <div class="page">
         <?php include_once('html/header_navbar.php'); ?>
         <div class="page-content d-flex align-items-stretch">
+            <?php include_once('html/side_navbar.php'); ?>
             <div class="content-inner">
+                <!-- Page Header-->
+                <header class="page-header">
+                    <div class="container-fluid">
+                        <h2 class="no-margin-bottom">主页</h2>
+                    </div>
+                </header>
+
                 <!-- 搜索栏 -->
                 <section class="d-flex flex-column align-items-center">
                     <h2 class="mb-3">搜索景点信息</h2>
@@ -49,37 +57,6 @@ $key = @$_GET['key'];
                         </form>
                     </div>
                 </section>
-
-                <!-- <section class="dashboard-header">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-lg-3">
-                                <div class="statistic d-flex align-items-center bg-white has-shadow">
-                                    <div class="icon bg-red"><i class="fa fa-tasks"></i></div>
-                                    <div class="text"><strong>分类1</strong><br><small>10本</small></div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="statistic d-flex align-items-center bg-white has-shadow">
-                                    <div class="icon bg-green"><i class="fa fa-tasks"></i></div>
-                                    <div class="text"><strong>分类2</strong><br><small>12本</small></div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="statistic d-flex align-items-center bg-white has-shadow">
-                                    <div class="icon bg-blue"><i class="fa fa-tasks"></i></div>
-                                    <div class="text"><strong>分类3</strong><br><small>12本</small></div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3">
-                                <div class="statistic d-flex align-items-center bg-white has-shadow">
-                                    <div class="icon bg-orange"><i class="fa fa-tasks"></i></div>
-                                    <div class="text"><strong>分类4</strong><br><small>12本</small></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section> -->
 
                 <div class="container-fluid">
                     <div class="row justify-content-center">
