@@ -150,3 +150,15 @@ function isValidDate($data, $isVoid = false)
         return false;
     }
 }
+
+function formatBigNumber($number) {
+    if($number < 1000000) {
+        return $number;
+    }
+    
+    if($number < 100000000) {
+        return number_format($number / 10000, 1) . '万';
+    }
+
+    return number_format($number / 100000000, 1) . '亿';
+}

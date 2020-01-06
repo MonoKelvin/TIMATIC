@@ -26,6 +26,7 @@ isEntry404(!$attraction || count($attraction) < 2);
     <div class="page">
         <?php include_once(__DIR__ . '/html/header_navbar.php'); ?>
         <div class="page-content d-flex align-items-stretch">
+            <?php include_once('html/side_navbar.php'); ?>
             <div class="content-inner">
                 <div class="breadcrumb-holder container-fluid">
                     <ul class="breadcrumb">

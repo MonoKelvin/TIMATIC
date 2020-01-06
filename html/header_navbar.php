@@ -11,7 +11,7 @@
                 <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                     <li class="nav-item">
                         <a data-toggle="modal" data-target="#logoutAlert" href="api/logout.php" class="nav-link logout">
-                            <span class="d-none d-sm-inline">Logout</span><i class="fa fa-sign-out"></i>
+                            <span class="d-none d-sm-inline">登出</span><i class="fa fa-sign-out"></i>
                         </a>
                     </li>
                 </ul>

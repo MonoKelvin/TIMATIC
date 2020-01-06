@@ -1,0 +1,26 @@
+<div class="col-12">
+    <div class="card hover-shadow flex-row pt-3 pb-3">
+        <img class="img-fluid col-2" src="{image}" alt="">
+        <div class="card-body col-10 d-flex align-items-center justify-content-between flex-row no-padding">
+            <div class="col-4 justify-content-between">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h1 class="mt-2">{name}</h1>
+                    <a class="text-muted small" href="detail.php?id={id}">查看详情>></a>
+                </div>
+                <div class="text-muted small flex-fill">{summary}&nbsp;.&nbsp;.&nbsp;.</div>
+            </div>
+
+            <span class="col-1 vline no-margin"></span>
+            <div class="col-3 d-flex flex-column align-items-center">
+                <span class="text-muted mb-3"><strong>{year}</strong>年度总人数</span>
+                <h2 class="text-blue number">{population}人</h2>
+            </div>
+
+            <span class="col-1 vline no-margin"></span>
+            <div class="col-3 d-flex flex-column align-items-center">
+                <span class="text-muted mb-3">日最大流量</span>
+                <h2 class="text-red number">{max_per_day}人</h2>
+            </div>
+        </div>
+    </div>
+</div>

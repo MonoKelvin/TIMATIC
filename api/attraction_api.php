@@ -1,12 +1,13 @@
 <?php
 require_once(dirname(__FILE__) . '\utility.php');
 getAttractionInfoForCard();
+
 /**
- * 为首页展示景点卡片而获取书的基本信息
+ * 为首页展示景点卡片而获取的基本信息
  * @param int $number 要一次拿出几个数据
  * @param int $first 从结果中的第几个位置拿，对分页展示有效
  * @param string $key 根据关键字查找
- * @return int 从数据库中取出的书，取出来的数据 <= $number
+ * @return int 从数据库中取出的数据，取出来的数据 <= $number
  */
 function getAttractionInfoForCard($first = 0, $number = 50, $key = null)
 {
@@ -27,6 +28,73 @@ function getAttractionInfoForCard($first = 0, $number = 50, $key = null)
         $res = $db->getAll(
             "select SQL_CALC_FOUND_ROWS id,name,image,mark,ticket,summary
             from attraction limit $first, $number"
+        );
+    }
+
+    $res['count'] = $db->getRow("select found_rows() num")['num'];
+
+    $db->close();
+
+    return $res;
+}
+
+/**
+ * 为历史景点卡片而获取的基本信息
+ * @param int $id 用户id
+ * @param int $number 要一次拿出几个数据
+ * @param int $first 从结果中的第几个位置拿，对分页展示有效
+ * @param string $key 根据关键字查找
+ * @return int 从数据库中取出的数据，取出来的数据 <= $number
+ */
+function getHistoryInfoForCard($id, $first = 0, $number = 50, $key = null)
+{
+    $db = MySqlAPI::getInstance();
+    $res = [];
+
+    if (!isValidString($key)) {
+        $key = null;
+    }
+
+    if ($key != null) {
+        $res = $db->getAll(
+            "select SQL_CALC_FOUND_ROWS * from user_history_card where u_id='$id' and name like '%$key%' limit $first, $number"
+        );
+    } else {
+        $res = $db->getAll(
+            "select SQL_CALC_FOUND_ROWS * from user_history_card where u_id='$id' limit $first, $number"
+        );
+    }
+
+    $res['count'] = $db->getRow("select found_rows() num")['num'];
+
+    $db->close();
+    
+    return $res;
+}
+
+/**
+ * 为年度人数分布卡片而获取的基本信息
+ * @param int $number 要一次拿出几个数据
+ * @param int $first 从结果中的第几个位置拿，对分页展示有效
+ * @param string $key 根据关键字查找
+ * @return int 从数据库中取出的数据，取出来的数据 <= $number
+ */
+function getPopulationForCard($first = 0, $number = 50, $key = null)
+{
+    $db = MySqlAPI::getInstance();
+    $res = [];
+
+    if (!isValidString($key)) {
+        $key = null;
+    }
+
+    if ($key != null) {
+        $res = $db->getAll(
+            "select SQL_CALC_FOUND_ROWS * from population_cards where name like '%$key%' limit $first, $number"
+        );
+    } else {
+        $res = $db->getAll(
+            "select SQL_CALC_FOUND_ROWS * from population_cards limit $first, $number"
         );
     }
 
